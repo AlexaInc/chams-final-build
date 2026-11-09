@@ -32,6 +32,7 @@ extern "C" {
 #endif
 
 #include <stddef.h>
+#include <stdint.h>
 
 typedef uint32_t VkFlags;
 typedef uint32_t VkBool32;

@@ -32,12 +32,6 @@ extern "C" {
 
 #include <stddef.h>
 
-typedef void *HGLRC;
-typedef int BOOL;
-typedef unsigned int DWORD;
-typedef const CHAR *LPCSTR;
-typedef void *PROC;
-
 typedef BOOL (GLAPIENTRY *PFNWGLCHOOSEPIXELFORMATARBPROC)(void *, const int *, const float *, UINT, int *, UINT *);
 typedef HGLRC (GLAPIENTRY *PFNWGLCREATECONTEXTATTRIBSARBPROC)(void *, void *, const int *);
 typedef int (GLAPIENTRY *PFNWGLGETPIXELFORMATATTRIBIVARBPROC)(void *, int, int, UINT, const int *, int *);
