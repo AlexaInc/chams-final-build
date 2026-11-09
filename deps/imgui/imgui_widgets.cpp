@@ -4068,7 +4068,6 @@ bool ImGui::InputDouble(const char* label, double* v, double step, double step_f
 // - DebugNodeInputTextState() [Internal]
 //-------------------------------------------------------------------------
 
-#include "stb_textedit.h"
 
 // If you want to use InputText() with std::string or any custom dynamic string type, use the wrapper in misc/cpp/imgui_stdlib.h/.cpp!
 bool ImGui::InputText(const char* label, char* buf, size_t buf_size, ImGuiInputTextFlags flags, ImGuiInputTextCallback callback, void* user_data)
