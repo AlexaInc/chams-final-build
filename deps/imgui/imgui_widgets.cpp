@@ -4217,7 +4217,7 @@ static int  STB_TEXTEDIT_MOVEWORDRIGHT_IMPL(ImGuiInputTextState* obj, int idx)  
 #define STB_TEXTEDIT_MOVEWORDRIGHT      STB_TEXTEDIT_MOVEWORDRIGHT_IMPL
 
 // Reimplementation of stb_textedit_move_line_start()/stb_textedit_move_line_end() which supports word-wrapping.
-static int STB_TEXTEDIT_MOVELINESTART_IMPL(ImGuiInputTextState* obj, ImStb::STB_TexteditState* state, int cursor)
+static int STB_TEXTEDIT_MOVELINESTART_IMPL(ImGuiInputTextState* obj, STB_TexteditState* state, int cursor)
 {
     if (state->single_line)
         return 0;
@@ -4253,7 +4253,7 @@ static int STB_TEXTEDIT_MOVELINESTART_IMPL(ImGuiInputTextState* obj, ImStb::STB_
     return cursor;
 }
 
-static int STB_TEXTEDIT_MOVELINEEND_IMPL(ImGuiInputTextState* obj, ImStb::STB_TexteditState* state, int cursor)
+static int STB_TEXTEDIT_MOVELINEEND_IMPL(ImGuiInputTextState* obj, STB_TexteditState* state, int cursor)
 {
     int n = STB_TEXTEDIT_STRINGLEN(obj);
     if (state->single_line)
@@ -4357,11 +4357,11 @@ static int STB_TEXTEDIT_INSERTCHARS(ImGuiInputTextState* obj, int pos, const cha
 static void stb_textedit_replace(ImGuiInputTextState* str, STB_TexteditState* state, const IMSTB_TEXTEDIT_CHARTYPE* text, int text_len)
 {
     stb_text_makeundo_replace(str, state, 0, str->TextLen, text_len);
-    ImStb::STB_TEXTEDIT_DELETECHARS(str, 0, str->TextLen);
+    STB_TEXTEDIT_DELETECHARS(str, 0, str->TextLen);
     state->cursor = state->select_start = state->select_end = 0;
     if (text_len <= 0)
         return;
-    int text_len_inserted = ImStb::STB_TEXTEDIT_INSERTCHARS(str, 0, text, text_len);
+    int text_len_inserted = STB_TEXTEDIT_INSERTCHARS(str, 0, text, text_len);
     if (text_len_inserted > 0)
     {
         state->cursor = state->select_start = state->select_end = text_len;
@@ -5109,20 +5109,20 @@ bool ImGui::InputTextEx(const char* label, const char* hint, char* buf, int buf_
                 // Double-click: Select word
                 // We always use the "Mac" word advance for double-click select vs Ctrl+Right which use the platform dependent variant:
                 // FIXME: There are likely many ways to improve this behavior, but there's no "right" behavior (depends on use-case, software, OS)
-                const bool is_bol = (state->Stb->cursor == 0) || ImStb::STB_TEXTEDIT_GETCHAR(state, state->Stb->cursor - 1) == '\n';
+                const bool is_bol = (state->Stb->cursor == 0) || STB_TEXTEDIT_GETCHAR(state, state->Stb->cursor - 1) == '\n';
                 if (STB_TEXT_HAS_SELECTION(state->Stb) || !is_bol)
                     state->OnKeyPressed(STB_TEXTEDIT_K_WORDLEFT);
                 //state->OnKeyPressed(STB_TEXTEDIT_K_WORDRIGHT | STB_TEXTEDIT_K_SHIFT);
                 if (!STB_TEXT_HAS_SELECTION(state->Stb))
-                    ImStb::stb_textedit_prep_selection_at_cursor(state->Stb);
-                state->Stb->cursor = ImStb::STB_TEXTEDIT_MOVEWORDRIGHT_MAC(state, state->Stb->cursor);
+                    stb_textedit_prep_selection_at_cursor(state->Stb);
+                state->Stb->cursor = STB_TEXTEDIT_MOVEWORDRIGHT_MAC(state, state->Stb->cursor);
                 state->Stb->select_end = state->Stb->cursor;
-                ImStb::stb_textedit_clamp(state, state->Stb);
+                stb_textedit_clamp(state, state->Stb);
             }
             else
             {
                 // Triple-click: Select line
-                const bool is_eol = ImStb::STB_TEXTEDIT_GETCHAR(state, state->Stb->cursor) == '\n';
+                const bool is_eol = STB_TEXTEDIT_GETCHAR(state, state->Stb->cursor) == '\n';
                 state->WrapWidth = 0.0f; // Temporarily disable wrapping so we use real line start.
                 state->OnKeyPressed(STB_TEXTEDIT_K_LINESTART);
                 state->OnKeyPressed(STB_TEXTEDIT_K_LINEEND | STB_TEXTEDIT_K_SHIFT);
@@ -5829,8 +5829,8 @@ void ImGui::DebugNodeInputTextState(ImGuiInputTextState* state)
 {
 #ifndef IMGUI_DISABLE_DEBUG_TOOLS
     ImGuiContext& g = *GImGui;
-    ImStb::STB_TexteditState* stb_state = state->Stb;
-    ImStb::StbUndoState* undo_state = &stb_state->undostate;
+    STB_TexteditState* stb_state = state->Stb;
+    StbUndoState* undo_state = &stb_state->undostate;
     Text("ID: 0x%08X, ActiveID: 0x%08X", state->ID, g.ActiveId);
     DebugLocateItemOnHover(state->ID);
     Text("TextLen: %d, Cursor: %d%s, Selection: %d..%d", state->TextLen, stb_state->cursor,
@@ -5845,7 +5845,7 @@ void ImGui::DebugNodeInputTextState(ImGuiInputTextState* state)
         PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 0));
         for (int n = 0; n < IMSTB_TEXTEDIT_UNDOSTATECOUNT; n++)
         {
-            ImStb::StbUndoRecord* undo_rec = &undo_state->undo_rec[n];
+            StbUndoRecord* undo_rec = &undo_state->undo_rec[n];
             const char undo_rec_type = (n < undo_state->undo_point) ? 'u' : (n >= undo_state->redo_point) ? 'r' : ' ';
             if (undo_rec_type == ' ')
                 BeginDisabled();
