@@ -42,28 +42,19 @@ Index of this file:
 
 #include "imgui.h"
 
-// stb_textedit.h type declarations (no STB_TEXTEDIT_IMPLEMENTATION yet)
-// This defines STB_TextdevState, StbUndoState, StbTextdevRow, etc.
-#include "stb_textedit.h"
+// Forward declarations needed by stb_textedit.h implementation callbacks.
+// ImGuiInputTextState is defined later in imgui_internal.h; StbTexteditRow
+// is defined by stb_textedit.h itself.
+struct ImGuiInputTextState;
 
-// stb_textedit.h full implementation configuration
+// stb_textedit.h configuration - all macros must be defined before the include
+// so type declarations (StbUndoState.undo_char etc.) use the correct CHARTYPE.
 #define STB_TEXTEDIT_IMPLEMENTATION
 #define STB_TEXTEDIT_STRING               ImGuiInputTextState
 #define STB_TEXTEDIT_CHARTYPE             char
-#define STB_TEXTEDIT_GETWIDTH_NEWLINE     (-1.0f)
 #define STB_TEXTEDIT_UNDOSTATECOUNT       99
 #define STB_TEXTEDIT_UNDOCHARCOUNT        999
-
-// Forward declarations for callbacks required by stb_textedit.h implementation.
-// The definitions appear later in this file (after ImGuiInputTextState is complete).
-struct ImGuiInputTextState;
-static int     STB_TEXTEDIT_STRINGLEN(const ImGuiInputTextState* obj);
-static char    STB_TEXTEDIT_GETCHAR(const ImGuiInputTextState* obj, int idx);
-static float   STB_TEXTEDIT_GETWIDTH(ImGuiInputTextState* obj, int line_start_idx, int char_idx);
 #define STB_TEXTEDIT_NEWLINE              '\n'
-static void    STB_TEXTEDIT_LAYOUTROW(StbTexteditRow* r, ImGuiInputTextState* obj, int line_start_idx);
-static void    STB_TEXTEDIT_DELETECHARS(ImGuiInputTextState* obj, int pos, int n);
-static int     STB_TEXTEDIT_INSERTCHARS(ImGuiInputTextState* obj, int pos, const char* new_text, int new_text_len);
 
 #define STB_TEXTEDIT_IS_SPACE(c)          (((c) == ' ') || ((c) == '\t') || ((c) == '\n') || ((c) == '\r'))
 #define STB_TEXTEDIT_KEYTOTEXT(k)         (((k) >= 32 && (k) < 128) ? (k) : -1)
@@ -85,6 +76,15 @@ static int     STB_TEXTEDIT_INSERTCHARS(ImGuiInputTextState* obj, int pos, const
 #define STB_TEXTEDIT_K_PGUP         0x20000E
 #define STB_TEXTEDIT_K_PGDOWN       0x20000F
 #define STB_TEXTEDIT_K_SHIFT        0x400000
+
+// Forward declarations for callbacks required by stb_textedit.h implementation.
+// Definitions appear later in this file (after ImGuiInputTextState is complete).
+static int     STB_TEXTEDIT_STRINGLEN(const ImGuiInputTextState* obj);
+static char    STB_TEXTEDIT_GETCHAR(const ImGuiInputTextState* obj, int idx);
+static float   STB_TEXTEDIT_GETWIDTH(ImGuiInputTextState* obj, int line_start_idx, int char_idx);
+static void    STB_TEXTEDIT_LAYOUTROW(void* r, ImGuiInputTextState* obj, int line_start_idx);
+static void    STB_TEXTEDIT_DELETECHARS(ImGuiInputTextState* obj, int pos, int n);
+static int     STB_TEXTEDIT_INSERTCHARS(ImGuiInputTextState* obj, int pos, const char* new_text, int new_text_len);
 
 #include "stb_textedit.h"
 
@@ -4150,17 +4150,18 @@ static ImVec2 InputTextCalcTextSize(ImGuiContext* ctx, const char* text_begin, c
 static int     STB_TEXTEDIT_STRINGLEN(const ImGuiInputTextState* obj)                             { return obj->TextLen; }
 static char    STB_TEXTEDIT_GETCHAR(const ImGuiInputTextState* obj, int idx)                      { IM_ASSERT(idx >= 0 && idx <= obj->TextLen); return obj->TextSrc[idx]; }
 static float   STB_TEXTEDIT_GETWIDTH(ImGuiInputTextState* obj, int line_start_idx, int char_idx)  { unsigned int c; ImTextCharFromUtf8(&c, obj->TextSrc + line_start_idx + char_idx, obj->TextSrc + obj->TextLen); if ((ImWchar)c == '\n') return IMSTB_TEXTEDIT_GETWIDTH_NEWLINE; ImGuiContext& g = *obj->Ctx; return g.FontBaked->GetCharAdvance((ImWchar)c) * g.FontBakedScale; }
-static void    STB_TEXTEDIT_LAYOUTROW(StbTexteditRow* r, ImGuiInputTextState* obj, int line_start_idx)
+static void    STB_TEXTEDIT_LAYOUTROW(void* r, ImGuiInputTextState* obj, int line_start_idx)
 {
+    StbTexteditRow* row = (StbTexteditRow*)r;
     const char* text = obj->TextSrc;
     const char* text_remaining = NULL;
     const ImVec2 size = InputTextCalcTextSize(obj->Ctx, text + line_start_idx, text + obj->TextLen, text + obj->TextLen, &text_remaining, NULL, ImDrawTextFlags_StopOnNewLine | ImDrawTextFlags_WrapKeepBlanks);
-    r->x0 = 0.0f;
-    r->x1 = size.x;
-    r->baseline_y_delta = size.y;
-    r->ymin = 0.0f;
-    r->ymax = size.y;
-    r->num_chars = (int)(text_remaining - (text + line_start_idx));
+    row->x0 = 0.0f;
+    row->x1 = size.x;
+    row->baseline_y_delta = size.y;
+    row->ymin = 0.0f;
+    row->ymax = size.y;
+    row->num_chars = (int)(text_remaining - (text + line_start_idx));
 }
 
 #define IMSTB_TEXTEDIT_GETNEXTCHARINDEX  IMSTB_TEXTEDIT_GETNEXTCHARINDEX_IMPL
