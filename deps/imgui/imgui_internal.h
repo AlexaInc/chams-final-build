@@ -1320,6 +1320,9 @@ struct IMGUI_API ImGuiInputTextDeactivatedState
 #define IMSTB_TEXTEDIT_GETWIDTH_NEWLINE   (-1.0f)
 #define IMSTB_TEXTEDIT_UNDOSTATECOUNT     99
 #define IMSTB_TEXTEDIT_UNDOCHARCOUNT      999
+#ifdef STB_TEXTEDIT_IMPLEMENTATION
+#undef STB_TEXTEDIT_IMPLEMENTATION
+#endif
 #include "stb_textedit.h"
 typedef STB_TexteditState ImStbTexteditState;
 

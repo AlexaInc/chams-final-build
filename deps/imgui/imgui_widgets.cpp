@@ -41,9 +41,55 @@ Index of this file:
 #endif
 
 #include "imgui.h"
+
+// stb_textedit.h full implementation configuration
+// Must be included before imgui_internal.h so that imgui_internal.h's
+// #include "stb_textedit.h" only provides type declarations (implementations
+// are already compiled here via STB_TEXTEDIT_IMPLEMENTATION).
+#define STB_TEXTEDIT_IMPLEMENTATION
+#define STB_TEXTEDIT_STRING               ImGuiInputTextState
+#define STB_TEXTEDIT_CHARTYPE             char
+#define STB_TEXTEDIT_GETWIDTH_NEWLINE     (-1.0f)
+#define STB_TEXTEDIT_UNDOSTATECOUNT       99
+#define STB_TEXTEDIT_UNDOCHARCOUNT        999
+
+// Forward declarations for callbacks required by stb_textedit.h implementation.
+// The definitions appear later in this file (after ImGuiInputTextState is complete).
+struct ImGuiInputTextState;
+struct StbTexteditRow;
+static int     STB_TEXTEDIT_STRINGLEN(const ImGuiInputTextState* obj);
+static char    STB_TEXTEDIT_GETCHAR(const ImGuiInputTextState* obj, int idx);
+static float   STB_TEXTEDIT_GETWIDTH(ImGuiInputTextState* obj, int line_start_idx, int char_idx);
+#define STB_TEXTEDIT_NEWLINE              '\n'
+static void    STB_TEXTEDIT_LAYOUTROW(StbTexteditRow* r, ImGuiInputTextState* obj, int line_start_idx);
+static void    STB_TEXTEDIT_DELETECHARS(ImGuiInputTextState* obj, int pos, int n);
+static int     STB_TEXTEDIT_INSERTCHARS(ImGuiInputTextState* obj, int pos, const char* new_text, int new_text_len);
+
+#define STB_TEXTEDIT_IS_SPACE(c)          (((c) == ' ') || ((c) == '\t') || ((c) == '\n') || ((c) == '\r'))
+#define STB_TEXTEDIT_KEYTOTEXT(k)         (((k) >= 32 && (k) < 128) ? (k) : -1)
+
+#define STB_TEXTEDIT_K_LEFT         0x200000
+#define STB_TEXTEDIT_K_RIGHT        0x200001
+#define STB_TEXTEDIT_K_UP           0x200002
+#define STB_TEXTEDIT_K_DOWN         0x200003
+#define STB_TEXTEDIT_K_LINESTART    0x200004
+#define STB_TEXTEDIT_K_LINEEND      0x200005
+#define STB_TEXTEDIT_K_TEXTSTART    0x200006
+#define STB_TEXTEDIT_K_TEXTEND      0x200007
+#define STB_TEXTEDIT_K_DELETE       0x200008
+#define STB_TEXTEDIT_K_BACKSPACE    0x200009
+#define STB_TEXTEDIT_K_UNDO         0x20000A
+#define STB_TEXTEDIT_K_REDO         0x20000B
+#define STB_TEXTEDIT_K_WORDLEFT     0x20000C
+#define STB_TEXTEDIT_K_WORDRIGHT    0x20000D
+#define STB_TEXTEDIT_K_PGUP         0x20000E
+#define STB_TEXTEDIT_K_PGDOWN       0x20000F
+#define STB_TEXTEDIT_K_SHIFT        0x400000
+
+#include "stb_textedit.h"
+
 #ifndef IMGUI_DISABLE
 #include "imgui_internal.h"
-#include "stb_textedit.h"
 
 // System includes
 #include <stdint.h>     // intptr_t
@@ -4104,7 +4150,6 @@ static ImVec2 InputTextCalcTextSize(ImGuiContext* ctx, const char* text_begin, c
 static int     STB_TEXTEDIT_STRINGLEN(const ImGuiInputTextState* obj)                             { return obj->TextLen; }
 static char    STB_TEXTEDIT_GETCHAR(const ImGuiInputTextState* obj, int idx)                      { IM_ASSERT(idx >= 0 && idx <= obj->TextLen); return obj->TextSrc[idx]; }
 static float   STB_TEXTEDIT_GETWIDTH(ImGuiInputTextState* obj, int line_start_idx, int char_idx)  { unsigned int c; ImTextCharFromUtf8(&c, obj->TextSrc + line_start_idx + char_idx, obj->TextSrc + obj->TextLen); if ((ImWchar)c == '\n') return IMSTB_TEXTEDIT_GETWIDTH_NEWLINE; ImGuiContext& g = *obj->Ctx; return g.FontBaked->GetCharAdvance((ImWchar)c) * g.FontBakedScale; }
-static char    STB_TEXTEDIT_NEWLINE = '\n';
 static void    STB_TEXTEDIT_LAYOUTROW(StbTexteditRow* r, ImGuiInputTextState* obj, int line_start_idx)
 {
     const char* text = obj->TextSrc;
