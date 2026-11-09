@@ -43,6 +43,7 @@ Index of this file:
 #include "imgui.h"
 #ifndef IMGUI_DISABLE
 #include "imgui_internal.h"
+#include "stb_textedit.h"
 
 // System includes
 #include <stdint.h>     // intptr_t
