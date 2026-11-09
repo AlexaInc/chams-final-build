@@ -14,5 +14,3 @@ int gladLoadWGL(void *hdc, void *load_func) {
     (void) load_func;
     return 1;
 }
-
-#endif /* GLAD_WGL_IMPLEMENTATION */
