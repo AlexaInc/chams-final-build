@@ -118,6 +118,11 @@
     <GladExtensions Include="$(GladWGLExtensions)" />
     <GladExtensions Include="$(GladVulkanExtensions)" />
   </ItemGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(SolutionDir)deps\glad\target\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <PropertyGroup>
     <CleanDependsOn>

@@ -91,5 +91,10 @@
     <ClInclude Include="stb_image\stb_image_dds.h" />
     <ClInclude Include="stb_image\stb_image_write_hdr_png.h" />
   </ItemGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(SolutionDir)deps\stb;$(SolutionDir)deps\stb_image;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
 </Project>

@@ -1,2 +1,1 @@
-// ImGui config translation unit
-#include "imgui.cpp"
+// ImGui config translation unit (empty - configuration handled via imgui_config.hpp)

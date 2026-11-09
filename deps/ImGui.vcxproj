@@ -101,5 +101,10 @@
       <AdditionalIncludeDirectories>$(SolutionDir)deps\imgui</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(SolutionDir)deps\imgui;$(SolutionDir)deps\stb;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
 </Project>
