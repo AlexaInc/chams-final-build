@@ -95,15 +95,9 @@
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="glad\target\src\gl.c">
-      <AdditionalIncludeDirectories>$(SolutionDir)deps\glad\target\include</AdditionalIncludeDirectories>
-    </ClCompile>
-    <ClCompile Include="glad\target\src\vulkan.c">
-      <AdditionalIncludeDirectories>$(SolutionDir)deps\glad\target\include</AdditionalIncludeDirectories>
-    </ClCompile>
-    <ClCompile Include="glad\target\src\wgl.c">
-      <AdditionalIncludeDirectories>$(SolutionDir)deps\glad\target\include</AdditionalIncludeDirectories>
-    </ClCompile>
+    <ClCompile Include="glad\target\src\gl.c" />
+    <ClCompile Include="glad\target\src\vulkan.c" />
+    <ClCompile Include="glad\target\src\wgl.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="glad\target\include\glad\gl.h" />
@@ -118,11 +112,6 @@
     <GladExtensions Include="$(GladWGLExtensions)" />
     <GladExtensions Include="$(GladVulkanExtensions)" />
   </ItemGroup>
-  <ItemDefinitionGroup>
-    <ClCompile>
-      <AdditionalIncludeDirectories>$(SolutionDir)deps\glad\target\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-    </ClCompile>
-  </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <PropertyGroup>
     <CleanDependsOn>
