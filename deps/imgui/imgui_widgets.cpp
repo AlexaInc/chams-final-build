@@ -42,10 +42,11 @@ Index of this file:
 
 #include "imgui.h"
 
+// stb_textedit.h type declarations (no STB_TEXTEDIT_IMPLEMENTATION yet)
+// This defines STB_TextdevState, StbUndoState, StbTextdevRow, etc.
+#include "stb_textedit.h"
+
 // stb_textedit.h full implementation configuration
-// Must be included before imgui_internal.h so that imgui_internal.h's
-// #include "stb_textedit.h" only provides type declarations (implementations
-// are already compiled here via STB_TEXTEDIT_IMPLEMENTATION).
 #define STB_TEXTEDIT_IMPLEMENTATION
 #define STB_TEXTEDIT_STRING               ImGuiInputTextState
 #define STB_TEXTEDIT_CHARTYPE             char
@@ -56,7 +57,6 @@ Index of this file:
 // Forward declarations for callbacks required by stb_textedit.h implementation.
 // The definitions appear later in this file (after ImGuiInputTextState is complete).
 struct ImGuiInputTextState;
-struct StbTexteditRow;
 static int     STB_TEXTEDIT_STRINGLEN(const ImGuiInputTextState* obj);
 static char    STB_TEXTEDIT_GETCHAR(const ImGuiInputTextState* obj, int idx);
 static float   STB_TEXTEDIT_GETWIDTH(ImGuiInputTextState* obj, int line_start_idx, int char_idx);
