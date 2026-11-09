@@ -19,8 +19,13 @@ jobs:
       with:
         submodules: false
 
+    - name: Verify glad files exist
+      run: |
+        Get-ChildItem deps/glad/target/include/glad/
+        Get-ChildItem deps/glad/target/src/
+
     - name: Add MSBuild to PATH
       uses: microsoft/setup-msbuild@v2
 
     - name: Build ReShade Release x64
-      run: msbuild ReShade.sln /p:Configuration=Release /p:Platform=x64 /p:VisualStudioVersion=17.0 /m
+      run: msbuild ReShade.vcxproj /p:Configuration=Release /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:detailed /m
