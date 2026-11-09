@@ -1259,8 +1259,8 @@ typedef void (GLAPIENTRY *PFNGLGLGETSAMPLERPARAMETERFVPROC)(GLuint, GLenum, GLfl
 typedef void (GLAPIENTRY *PFNGLGLGETSAMPLERPARAMETERIVPROC)(GLuint, GLenum, GLint *);
 typedef void (GLAPIENTRY *PFNGLGLGETSEMAPHOREPARAMETERIVNVPROC)(GLuint, GLenum, GLint *);
 typedef void (GLAPIENTRY *PFNGLGLGETSEMAPHOREPARAMETERUI64VEXTPROC)(GLuint, GLenum, GLuint64 *);
-typedef void (GLAPIENTRY *PFNGLGLGETSEPARABLEFILTERPROC)(GLenum, GLenum, GLenum, const void*, void, const void*);
-typedef void (GLAPIENTRY *PFNGLGLGETSEPARABLEFILTEREXTPROC)(GLenum, GLenum, GLenum, const void*, void, const void*);
+typedef void (GLAPIENTRY *PFNGLGLGETSEPARABLEFILTERPROC)(GLenum, GLenum, GLenum, const void*, const void*, const void*);
+typedef void (GLAPIENTRY *PFNGLGLGETSEPARABLEFILTEREXTPROC)(GLenum, GLenum, GLenum, const void*, const void*, const void*);
 typedef void (GLAPIENTRY *PFNGLGLGETSHADERINFOLOGPROC)(GLuint, GLsizei, GLsizei *, GLchar *);
 typedef void (GLAPIENTRY *PFNGLGLGETSHADERPRECISIONFORMATPROC)(GLenum, GLenum, GLint *, GLint *);
 typedef void (GLAPIENTRY *PFNGLGLGETSHADERSOURCEPROC)(GLuint, GLsizei, GLsizei *, GLchar *);

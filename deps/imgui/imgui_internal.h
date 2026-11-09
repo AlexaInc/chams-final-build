@@ -1320,8 +1320,8 @@ struct IMGUI_API ImGuiInputTextDeactivatedState
 #define IMSTB_TEXTEDIT_GETWIDTH_NEWLINE   (-1.0f)
 #define IMSTB_TEXTEDIT_UNDOSTATECOUNT     99
 #define IMSTB_TEXTEDIT_UNDOCHARCOUNT      999
-namespace ImStb { struct STB_TexteditState; }
-typedef ImStb::STB_TexteditState ImStbTexteditState;
+struct STB_TexteditState;
+typedef STB_TexteditState ImStbTexteditState;
 
 // Internal state of the currently focused/edited text input box
 // For a given item ID, access with ImGui::GetInputTextState()

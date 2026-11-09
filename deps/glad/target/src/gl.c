@@ -14,5 +14,3 @@ int gladLoadGLContext(void *dispatch_table, void *load_func) {
     (void) load_func;
     return 1;
 }
-
-#endif /* GLAD_GL_IMPLEMENTATION */
