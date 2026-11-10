@@ -4389,9 +4389,37 @@ static int STB_TEXTEDIT_INSERTCHARS(ImGuiInputTextState* obj, int pos, const cha
 #define STB_TEXTEDIT_K_PGDOWN       0x20000F // keyboard input to move cursor down a page
 #define STB_TEXTEDIT_K_SHIFT        0x400000
 
-#define IMSTB_TEXTEDIT_IMPLEMENTATION
-#define IMSTB_TEXTEDIT_memmove memmove
-#include "imstb_textedit.h"
+// Forward declarations for callbacks required by stb_textedit.h implementation.
+// Definitions appear later in this file (after ImGuiInputTextState is complete).
+static int     STB_TEXTEDIT_STRINGLEN(const ImGuiInputTextState* obj);
+static char    STB_TEXTEDIT_GETCHAR(const ImGuiInputTextState* obj, int idx);
+static float   STB_TEXTEDIT_GETWIDTH(ImGuiInputTextState* obj, int line_start_idx, int char_idx);
+#define STB_TEXTEDIT_NEWLINE              '\n'
+static void    STB_TEXTEDIT_LAYOUTROW(void* r, ImGuiInputTextState* obj, int line_start_idx);
+static void    STB_TEXTEDIT_DELETECHARS(ImGuiInputTextState* obj, int pos, int n);
+static int     STB_TEXTEDIT_INSERTCHARS(ImGuiInputTextState* obj, int pos, const char* new_text, int new_text_len);
+
+#define STB_TEXTEDIT_IMPLEMENTATION
+#include "stb_textedit.h"
+
+// stb_textedit_text is not provided by stb_textedit.h v1.14; implement it here
+// using the same logic as stb_textedit_replace (insert text replacing selection).
+static void stb_textedit_text(ImGuiInputTextState* str, STB_TexteditState* state, const char* text, int text_len)
+{
+    stb_text_makeundo_replace(str, state, 0, str->TextLen, text_len);
+    STB_TEXTEDIT_DELETECHARS(str, 0, str->TextLen);
+    state->cursor = state->select_start = state->select_end = 0;
+    if (text_len <= 0)
+        return;
+    int text_len_inserted = STB_TEXTEDIT_INSERTCHARS(str, 0, text, text_len);
+    if (text_len_inserted > 0)
+    {
+        state->cursor = state->select_start = state->select_end = text_len;
+        state->has_preferred_x = 0;
+        return;
+    }
+    IM_ASSERT(0); // Failed to insert character, normally shouldn't happen
+}
 
 // stb_textedit internally allows for a single undo record to do addition and deletion, but somehow, calling
 // the stb_textedit_paste() function creates two separate records, so we perform it manually. (FIXME: Report to nothings/stb?)
