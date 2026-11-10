@@ -1313,13 +1313,21 @@ struct IMGUI_API ImGuiInputTextDeactivatedState
 };
 
 // Forward declare imstb_textedit.h structure + make its main configuration define accessible
-#undef IMSTB_TEXTEDIT_STRING
-#undef IMSTB_TEXTEDIT_CHARTYPE
+#ifndef IMSTB_TEXTEDIT_STRING
 #define IMSTB_TEXTEDIT_STRING             ImGuiInputTextState
+#endif
+#ifndef IMSTB_TEXTEDIT_CHARTYPE
 #define IMSTB_TEXTEDIT_CHARTYPE           char
+#endif
+#ifndef IMSTB_TEXTEDIT_GETWIDTH_NEWLINE
 #define IMSTB_TEXTEDIT_GETWIDTH_NEWLINE   (-1.0f)
+#endif
+#ifndef IMSTB_TEXTEDIT_UNDOSTATECOUNT
 #define IMSTB_TEXTEDIT_UNDOSTATECOUNT     99
+#endif
+#ifndef IMSTB_TEXTEDIT_UNDOCHARCOUNT
 #define IMSTB_TEXTEDIT_UNDOCHARCOUNT      999
+#endif
 #ifndef STB_TEXTEDIT_CHARTYPE
 #define STB_TEXTEDIT_CHARTYPE             IMSTB_TEXTEDIT_CHARTYPE
 #endif
