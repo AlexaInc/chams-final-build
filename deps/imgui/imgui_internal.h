@@ -1331,10 +1331,7 @@ struct IMGUI_API ImGuiInputTextDeactivatedState
 #ifndef STB_TEXTEDIT_CHARTYPE
 #define STB_TEXTEDIT_CHARTYPE             IMSTB_TEXTEDIT_CHARTYPE
 #endif
-#ifdef STB_TEXTEDIT_IMPLEMENTATION
-#undef STB_TEXTEDIT_IMPLEMENTATION
-#endif
-#include "stb_textedit.h"
+struct STB_TexteditState;
 typedef STB_TexteditState ImStbTexteditState;
 
 // Internal state of the currently focused/edited text input box
