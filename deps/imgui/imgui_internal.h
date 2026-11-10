@@ -1331,6 +1331,9 @@ struct IMGUI_API ImGuiInputTextDeactivatedState
 #ifndef STB_TEXTEDIT_CHARTYPE
 #define STB_TEXTEDIT_CHARTYPE             IMSTB_TEXTEDIT_CHARTYPE
 #endif
+#ifndef STB_TEXTEDIT_STRING
+#define STB_TEXTEDIT_STRING               IMSTB_TEXTEDIT_STRING
+#endif
 struct STB_TexteditState;
 typedef STB_TexteditState ImStbTexteditState;
 
