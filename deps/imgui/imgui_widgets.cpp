@@ -45,6 +45,24 @@ Index of this file:
 // Forward declare ImGuiInputTextState (defined in imgui_internal.h, included below)
 struct ImGuiInputTextState;
 
+// stb_textedit.h required macros - must be defined before any code uses them
+// and before #include "stb_textedit.h" later in this file
+#define STB_TEXTEDIT_STRING               ImGuiInputTextState
+#define STB_TEXTEDIT_CHARTYPE             char
+#define STB_TEXTEDIT_UNDOSTATECOUNT       99
+#define STB_TEXTEDIT_UNDOCHARCOUNT        999
+#define STB_TEXTEDIT_NEWLINE              '\n'
+#define STB_TEXTEDIT_GETWIDTH_NEWLINE     (-1.0f)
+#define STB_TEXTEDIT_IS_SPACE(c)          (((c) == ' ') || ((c) == '\t') || ((c) == '\n') || ((c) == '\r'))
+#define STB_TEXTEDIT_KEYTOTEXT(k)         (((k) >= 32 && (k) < 128) ? (k) : -1)
+
+// Map IMSTB_TEXTEDIT_* aliases (used by old ImGui code) to STB_TEXTEDIT_* values
+#define IMSTB_TEXTEDIT_GETWIDTH_NEWLINE   STB_TEXTEDIT_GETWIDTH_NEWLINE
+#define IMSTB_TEXTEDIT_CHARTYPE           STB_TEXTEDIT_CHARTYPE
+#define IMSTB_TEXTEDIT_UNDOSTATECOUNT     STB_TEXTEDIT_UNDOSTATECOUNT
+#define IMSTB_TEXTEDIT_UNDOCHARCOUNT      STB_TEXTEDIT_UNDOCHARCOUNT
+#define IMSTB_TEXTEDIT_STRING             STB_TEXTEDIT_STRING
+
 #ifndef IMGUI_DISABLE
 #include "imgui_internal.h"
 
@@ -4351,23 +4369,6 @@ static int STB_TEXTEDIT_INSERTCHARS(ImGuiInputTextState* obj, int pos, const cha
 static int     STB_TEXTEDIT_STRINGLEN(const ImGuiInputTextState* obj);
 static char    STB_TEXTEDIT_GETCHAR(const ImGuiInputTextState* obj, int idx);
 static float   STB_TEXTEDIT_GETWIDTH(ImGuiInputTextState* obj, int line_start_idx, int char_idx);
-
-// stb_textedit.h requires these macros to be defined before inclusion:
-// STB_TEXTEDIT_STRING, STB_TEXTEDIT_CHARTYPE, STB_TEXTEDIT_UNDOSTATECOUNT,
-// STB_TEXTEDIT_UNDOCHARCOUNT, STB_TEXTEDIT_NEWLINE, STB_TEXTEDIT_GETWIDTH_NEWLINE
-#define STB_TEXTEDIT_STRING               ImGuiInputTextState
-#define STB_TEXTEDIT_CHARTYPE             char
-#define STB_TEXTEDIT_UNDOSTATECOUNT       99
-#define STB_TEXTEDIT_UNDOCHARCOUNT        999
-#define STB_TEXTEDIT_NEWLINE              '\n'
-#define STB_TEXTEDIT_GETWIDTH_NEWLINE     (-1.0f)
-
-// Map IMSTB_TEXTEDIT_* aliases (used by old ImGui code) to STB_TEXTEDIT_* values
-#define IMSTB_TEXTEDIT_GETWIDTH_NEWLINE   STB_TEXTEDIT_GETWIDTH_NEWLINE
-#define IMSTB_TEXTEDIT_CHARTYPE           STB_TEXTEDIT_CHARTYPE
-#define IMSTB_TEXTEDIT_UNDOSTATECOUNT     STB_TEXTEDIT_UNDOSTATECOUNT
-#define IMSTB_TEXTEDIT_UNDOCHARCOUNT      STB_TEXTEDIT_UNDOCHARCOUNT
-#define IMSTB_TEXTEDIT_STRING             STB_TEXTEDIT_STRING
 
 static void    STB_TEXTEDIT_LAYOUTROW(void* r, ImGuiInputTextState* obj, int line_start_idx);
 static void    STB_TEXTEDIT_DELETECHARS(ImGuiInputTextState* obj, int pos, int n);
