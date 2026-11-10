@@ -42,51 +42,8 @@ Index of this file:
 
 #include "imgui.h"
 
-// Forward declarations needed by stb_textedit.h implementation callbacks.
-// ImGuiInputTextState is defined later in imgui_internal.h; StbTexteditRow
-// is defined by stb_textedit.h itself.
+// Forward declare ImGuiInputTextState (defined in imgui_internal.h, included below)
 struct ImGuiInputTextState;
-
-// stb_textedit.h configuration - all macros must be defined before the include
-// so type declarations (StbUndoState.undo_char etc.) use the correct CHARTYPE.
-#define STB_TEXTEDIT_IMPLEMENTATION
-#define STB_TEXTEDIT_STRING               ImGuiInputTextState
-#define STB_TEXTEDIT_CHARTYPE             char
-#define STB_TEXTEDIT_UNDOSTATECOUNT       99
-#define STB_TEXTEDIT_UNDOCHARCOUNT        999
-#define STB_TEXTEDIT_NEWLINE              '\n'
-
-#define STB_TEXTEDIT_IS_SPACE(c)          (((c) == ' ') || ((c) == '\t') || ((c) == '\n') || ((c) == '\r'))
-#define STB_TEXTEDIT_KEYTOTEXT(k)         (((k) >= 32 && (k) < 128) ? (k) : -1)
-
-#define STB_TEXTEDIT_K_LEFT         0x200000
-#define STB_TEXTEDIT_K_RIGHT        0x200001
-#define STB_TEXTEDIT_K_UP           0x200002
-#define STB_TEXTEDIT_K_DOWN         0x200003
-#define STB_TEXTEDIT_K_LINESTART    0x200004
-#define STB_TEXTEDIT_K_LINEEND      0x200005
-#define STB_TEXTEDIT_K_TEXTSTART    0x200006
-#define STB_TEXTEDIT_K_TEXTEND      0x200007
-#define STB_TEXTEDIT_K_DELETE       0x200008
-#define STB_TEXTEDIT_K_BACKSPACE    0x200009
-#define STB_TEXTEDIT_K_UNDO         0x20000A
-#define STB_TEXTEDIT_K_REDO         0x20000B
-#define STB_TEXTEDIT_K_WORDLEFT     0x20000C
-#define STB_TEXTEDIT_K_WORDRIGHT    0x20000D
-#define STB_TEXTEDIT_K_PGUP         0x20000E
-#define STB_TEXTEDIT_K_PGDOWN       0x20000F
-#define STB_TEXTEDIT_K_SHIFT        0x400000
-
-// Forward declarations for callbacks required by stb_textedit.h implementation.
-// Definitions appear later in this file (after ImGuiInputTextState is complete).
-static int     STB_TEXTEDIT_STRINGLEN(const ImGuiInputTextState* obj);
-static char    STB_TEXTEDIT_GETCHAR(const ImGuiInputTextState* obj, int idx);
-static float   STB_TEXTEDIT_GETWIDTH(ImGuiInputTextState* obj, int line_start_idx, int char_idx);
-static void    STB_TEXTEDIT_LAYOUTROW(void* r, ImGuiInputTextState* obj, int line_start_idx);
-static void    STB_TEXTEDIT_DELETECHARS(ImGuiInputTextState* obj, int pos, int n);
-static int     STB_TEXTEDIT_INSERTCHARS(ImGuiInputTextState* obj, int pos, const char* new_text, int new_text_len);
-
-#include "stb_textedit.h"
 
 #ifndef IMGUI_DISABLE
 #include "imgui_internal.h"
@@ -4394,7 +4351,24 @@ static int STB_TEXTEDIT_INSERTCHARS(ImGuiInputTextState* obj, int pos, const cha
 static int     STB_TEXTEDIT_STRINGLEN(const ImGuiInputTextState* obj);
 static char    STB_TEXTEDIT_GETCHAR(const ImGuiInputTextState* obj, int idx);
 static float   STB_TEXTEDIT_GETWIDTH(ImGuiInputTextState* obj, int line_start_idx, int char_idx);
+
+// stb_textedit.h requires these macros to be defined before inclusion:
+// STB_TEXTEDIT_STRING, STB_TEXTEDIT_CHARTYPE, STB_TEXTEDIT_UNDOSTATECOUNT,
+// STB_TEXTEDIT_UNDOCHARCOUNT, STB_TEXTEDIT_NEWLINE, STB_TEXTEDIT_GETWIDTH_NEWLINE
+#define STB_TEXTEDIT_STRING               ImGuiInputTextState
+#define STB_TEXTEDIT_CHARTYPE             char
+#define STB_TEXTEDIT_UNDOSTATECOUNT       99
+#define STB_TEXTEDIT_UNDOCHARCOUNT        999
 #define STB_TEXTEDIT_NEWLINE              '\n'
+#define STB_TEXTEDIT_GETWIDTH_NEWLINE     (-1.0f)
+
+// Map IMSTB_TEXTEDIT_* aliases (used by old ImGui code) to STB_TEXTEDIT_* values
+#define IMSTB_TEXTEDIT_GETWIDTH_NEWLINE   STB_TEXTEDIT_GETWIDTH_NEWLINE
+#define IMSTB_TEXTEDIT_CHARTYPE           STB_TEXTEDIT_CHARTYPE
+#define IMSTB_TEXTEDIT_UNDOSTATECOUNT     STB_TEXTEDIT_UNDOSTATECOUNT
+#define IMSTB_TEXTEDIT_UNDOCHARCOUNT      STB_TEXTEDIT_UNDOCHARCOUNT
+#define IMSTB_TEXTEDIT_STRING             STB_TEXTEDIT_STRING
+
 static void    STB_TEXTEDIT_LAYOUTROW(void* r, ImGuiInputTextState* obj, int line_start_idx);
 static void    STB_TEXTEDIT_DELETECHARS(ImGuiInputTextState* obj, int pos, int n);
 static int     STB_TEXTEDIT_INSERTCHARS(ImGuiInputTextState* obj, int pos, const char* new_text, int new_text_len);
